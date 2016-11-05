@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class Room : MonoBehaviour {
+public class Tile : MonoBehaviour {
 
     // Game State
     private int _guardOccupancy = 0;
-    private bool _cameraOn = false;
+    //private bool _cameraOn = false;
 
     // Designer
     public float _width = 1.0f;
@@ -20,7 +20,6 @@ public class Room : MonoBehaviour {
     
     void Start () {
         _guardOccupancy = 0;
-        _cameraOn = false;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -46,8 +45,8 @@ public class Room : MonoBehaviour {
         );
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(_width, 0.5f, _height));
-        Gizmos.DrawSphere(Vector3.zero, 0.5f);
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(_width, _height, 0.5f));
+        Gizmos.DrawSphere(Vector3.zero, 0.2f);
 
         /*
         Gizmos.color = Color.blue;
