@@ -46,9 +46,10 @@ public class Room : MonoBehaviour {
         );
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(_width, _height, 1.0f));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(_width, 0.5f, _height));
         Gizmos.DrawSphere(Vector3.zero, 0.5f);
 
+        /*
         Gizmos.color = Color.blue;
         foreach (var adj in _adjacentRooms)
         {
@@ -57,5 +58,6 @@ public class Room : MonoBehaviour {
                 Gizmos.DrawLine(Vector3.zero, adj.room.transform.position - roomCenter);
             }
         }
+        */
     }
 }

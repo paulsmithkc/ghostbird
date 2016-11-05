@@ -18,13 +18,13 @@ public class Player : MonoBehaviour
     private int _loneliness = 0;
 
     // Designer
-    private Rigidbody2D _rigidbody2D;
+    private Rigidbody _rigidbody;
 
     void Start()
     {
-        if (!_rigidbody2D)
+        if (!_rigidbody)
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
+            _rigidbody = GetComponent<Rigidbody>();
         }
     }
 
@@ -37,8 +37,9 @@ public class Player : MonoBehaviour
         float horizontal = Input.GetAxis(HORIZONTAL_INPUT);
         float vertical = Input.GetAxis(VERTICAL_INPUT);
 
-        _rigidbody2D.velocity = new Vector2(
+        _rigidbody.velocity = new Vector3(
             horizontal * _moveSpeed,
+            0.0f,
             vertical * _moveSpeed
         );
     }
