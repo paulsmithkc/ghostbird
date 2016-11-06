@@ -9,7 +9,6 @@ TagManager:
   - Player
   - Predator
   - Child
-  - FruitTree
   layers:
   - Default
   - TransparentFX
@@ -56,12 +55,6 @@ TagManager:
   - name: Bushes
     uniqueID: 4088862595
     locked: 0
-  - name: Fruit
-    uniqueID: 1093969643
-    locked: 0
   - name: Units
     uniqueID: 1131440461
-    locked: 0
-  - name: Icon
-    uniqueID: 1251071243
     locked: 0

@@ -11,3 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2dc94f66329d643a195cbe1c631d99, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
+  playerFood: 5
+  babyFood: 0
+  sleepLevel: 5
+  cutSceneBuffer: 20

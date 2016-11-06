@@ -87,10 +87,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 982dac5e12edfbc459a0ff30fc70170b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tiredCurrent: 0
+  _foodCurrent: 0
+  _hungerElapsed: 0
   _sleeping: 0
-  _path: []
+  _eating: 0
+  _eatingElapsed: 0
   _originTile: {fileID: 0}
   _targetTile: {fileID: 0}
+  pData: {fileID: 11400000, guid: 65bd77c22c4ae574587cf0335be74544, type: 2}
 --- !u!135 &135000014111361520
 SphereCollider:
   m_ObjectHideFlags: 1

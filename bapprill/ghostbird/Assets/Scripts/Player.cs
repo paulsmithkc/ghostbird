@@ -48,6 +48,9 @@ public class Player : MonoBehaviour
     private Rigidbody _rigidbody;
     private Animator _animator;
 
+    //Persistent data
+    public PlayerData pData;
+
     void Start()
     {
         if (!_rigidbody)
@@ -58,9 +61,9 @@ public class Player : MonoBehaviour
         {
             _animator = GetComponent<Animator>();
         }
-
-        _tiredCurrent = 0f;
-        _foodCurrent = 3;
+        
+        _tiredCurrent = pData.sleepLevel;
+        _foodCurrent = pData.playerFood;
         _hungerElapsed = 0.0f;
         _sleeping = false;
         _eating = false;
@@ -72,7 +75,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        /*
+        
         if (Input.GetButtonDown(QUIT_INPUT))
         {
             Time.timeScale = 0.0f;
@@ -88,10 +91,9 @@ public class Player : MonoBehaviour
         {
             Time.timeScale = (Time.timeScale == 0.0f ? 1.0f : 0.0f);
         }
-        */
 
         float deltaTime = Time.deltaTime;
-
+        
         _sleeping = _sleeping ^ Input.GetButtonDown("Fire2");
 
         //if (Input.GetButtonDown("Fire3"))
