@@ -6,6 +6,7 @@ public class UI_Loader : MonoBehaviour {
 
 	public void LoadScene(int sceneValue)
     {
-        SceneManager.LoadSceneAsync(sceneValue);
+        SceneManager.LoadScene(sceneValue);
+        Time.timeScale = 1f;
     }
 }

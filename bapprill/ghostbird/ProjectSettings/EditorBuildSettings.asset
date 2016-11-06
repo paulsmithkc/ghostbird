@@ -8,6 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/StartScene_a01.unity
   - enabled: 1
-    path: Assets/PauseScene_a01.unity
+    path: Assets/Scenes/Act1.unity
   - enabled: 1
-    path: Assets/UI_a01.unity
+    path: Assets/Sectors/Sector2/Sector2.unity
