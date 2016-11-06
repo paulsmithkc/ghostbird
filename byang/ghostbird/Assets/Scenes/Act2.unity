@@ -3497,7 +3497,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1142525738}
-  - 114: {fileID: 1142525739}
   - 114: {fileID: 1142525740}
   m_Layer: 0
   m_Name: EventRunner
@@ -3519,24 +3518,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 701041720}
   m_RootOrder: 0
---- !u!114 &1142525739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1142525737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06e57bc469a7ac04ba1a6ea4dc94e8e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eyeShotCameraSnapTransform: {fileID: 1699830738}
-  extremeCloseCameraSnapTransform: {fileID: 68708342}
-  fullLevelCameraSnapTransform: {fileID: 1456483110}
-  playerTransform: {fileID: 178110610}
-  introspectionContainer: {fileID: 1475629070}
-  introspectionText: {fileID: 1662506862}
-  fader: {fileID: 593044640}
 --- !u!114 &1142525740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3548,13 +3529,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553f7247abe3e02489e538c85e5aecd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eyeShotCameraSnapTransform: {fileID: 0}
-  extremeCloseCameraSnapTransform: {fileID: 0}
-  fullLevelCameraSnapTransform: {fileID: 0}
-  playerTransform: {fileID: 0}
-  introspectionContainer: {fileID: 0}
-  introspectionText: {fileID: 0}
-  fader: {fileID: 0}
+  eyeShotCameraSnapTransform: {fileID: 1699830738}
+  extremeCloseCameraSnapTransform: {fileID: 68708342}
+  fullLevelCameraSnapTransform: {fileID: 1456483110}
+  playerTransform: {fileID: 178110610}
+  introspectionContainer: {fileID: 1475629070}
+  introspectionText: {fileID: 1662506862}
+  fader: {fileID: 593044640}
 --- !u!1001 &1152555172
 Prefab:
   m_ObjectHideFlags: 0
