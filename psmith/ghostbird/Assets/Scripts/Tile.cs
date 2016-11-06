@@ -4,8 +4,7 @@ using System.Linq;
 public class Tile : MonoBehaviour {
 
     // Game State
-    private int _guardOccupancy = 0;
-    //private bool _cameraOn = false;
+    public int _predatorOccupancy = 0;
 
     // Designer
     public float _width = 1.0f;
@@ -19,18 +18,30 @@ public class Tile : MonoBehaviour {
     }
     
     void Start () {
-        _guardOccupancy = 0;
+        _predatorOccupancy = 0;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnMouseDown()
+    {
+        var sector = GameObject.FindObjectOfType<Sector>();
+        var player = GameObject.FindObjectOfType<Player>();
+
+        player._originTile = this;
+        player._targetTile = sector.GetClosestTile(player.transform.position);
+        player._path = sector.FindShortestPath(this, player._targetTile, 100);
+
+        Debug.Log("down");
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         switch (other.tag)
         {
-            case Player.GUARD_TAG:
-                ++_guardOccupancy;
+            case Player.PREDATOR_TAG:
+                ++_predatorOccupancy;
                 break;
             case Player.PLAYER_TAG:
-                --_guardOccupancy;
+                --_predatorOccupancy;
                 break;
         }
     }
@@ -45,8 +56,11 @@ public class Tile : MonoBehaviour {
         );
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(_width, _height, 0.5f));
-        Gizmos.DrawSphere(Vector3.zero, 0.2f);
+        Gizmos.DrawWireCube(
+            Vector3.zero, 
+            new Vector3(_width, _height, 0.5f + 0.5f * _predatorOccupancy)
+        );
+        //Gizmos.DrawSphere(Vector3.zero, 0.2f);
 
         /*
         Gizmos.color = Color.blue;
