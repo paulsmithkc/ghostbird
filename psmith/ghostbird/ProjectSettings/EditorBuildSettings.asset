@@ -8,6 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StartScene.unity
   - enabled: 1
-    path: Assets/Sectors/Sector2/Sector2.unity
-  - enabled: 1
     path: Assets/Scenes/Act1.unity
+  - enabled: 1
+    path: Assets/Scenes/Act2.unity

@@ -54,20 +54,20 @@ TagManager:
     uniqueID: 1499773499
     locked: 0
   - name: Fruit
-    uniqueID: 1093969643
+    uniqueID: 2043940263
     locked: 0
   - name: Player
     uniqueID: 1131440461
     locked: 0
   - name: Baby
-    uniqueID: 3296407611
-    locked: 0
-  - name: Predator
-    uniqueID: 3386592395
+    uniqueID: 4272750575
     locked: 0
   - name: Bushes
     uniqueID: 4088862595
     locked: 0
+  - name: Predator
+    uniqueID: 390026185
+    locked: 0
   - name: Icon
-    uniqueID: 1251071243
+    uniqueID: 2879837831
     locked: 0

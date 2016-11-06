@@ -32,7 +32,7 @@ public class Sector : MonoBehaviour {
 
         if (_tiles != null)
         {
-            foreach (var t in _tiles)
+            foreach (var t in _tiles.Where(x => x._passable))
             {
                 var tp = t.transform.position;
                 float d = Vector3.Distance(tp, pos);
@@ -51,7 +51,7 @@ public class Sector : MonoBehaviour {
         if (origin != null && _tiles != null)
         {
             var originPos = origin.transform.position;
-            foreach (var t in _tiles)
+            foreach (var t in _tiles.Where(x => x._passable))
             {
                 if (t != origin)
                 {

@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour {
 
     // Game State
     public int _predatorOccupancy = 0;
+    public bool _passable = true;
 
     // Designer
     public float _width = 1.0f;

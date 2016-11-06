@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class HudFade : MonoBehaviour
 {
     public Image fadeImage;
-    public Text fadeText;
     public Image reticle;
     public float defaultFadeTime = 4;
     public Color firstColor = Color.black;
@@ -30,7 +29,6 @@ public class HudFade : MonoBehaviour
         fadeImage.color = startColor;
         fadeImage.enabled = true;
         fadeImage.gameObject.SetActive(true);
-        FadeToClear();
     }
 
     // Update is called once per frame
