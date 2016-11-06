@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     // Designer
     private Rigidbody _rigidbody;
     private Animator _animator;
-    private SpriteRenderer _spriteRenderer;
+    //private SpriteRenderer _spriteRenderer;
 
     public enum PlayerState
     {
@@ -65,10 +65,10 @@ public class Player : MonoBehaviour
         {
             _animator = GetComponent<Animator>();
         }
-        if (!_spriteRenderer)
-        {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-        }
+        //if (!_spriteRenderer)
+        //{
+        //    _spriteRenderer = GetComponent<SpriteRenderer>();
+        //}
 
         _tiredCurrent = 0.0f;
         _foodCurrent = 0;
