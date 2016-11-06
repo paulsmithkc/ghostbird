@@ -21,6 +21,22 @@ public class Tile : MonoBehaviour {
         _predatorOccupancy = 0;
     }
 
+    public void OnMouseEnter()
+    {
+        foreach (var c in GetComponentsInChildren<TileObject>())
+        {
+            c.OnMouseEnter();
+        }
+    }
+
+    public void OnMouseExit()
+    {
+        foreach (var c in GetComponentsInChildren<TileObject>())
+        {
+            c.OnMouseExit();
+        }
+    }
+
     public void OnMouseDown()
     {
         var sector = GameObject.FindObjectOfType<Sector>();
@@ -32,12 +48,12 @@ public class Tile : MonoBehaviour {
         if (player._originTile != player._targetTile)
         {
             player._path = sector.FindShortestPath(player._originTile, this, 100);
-            player._sleeping = false;
-            player._eating = false;
+            player._state = Player.PlayerState.WALKING;
         }
         else if (player._targetTile != null)
         {
             player.StartEating();
+            player.StartHiding();
         }
     }
 

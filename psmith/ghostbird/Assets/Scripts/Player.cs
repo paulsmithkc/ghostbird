@@ -19,24 +19,25 @@ public class Player : MonoBehaviour
 
     // Physicis Tuning
     private const float _moveSpeed = 2.0f;
-    private const float _tiredMax = 15.0f;
+    private const float _tiredMax = 10.0f;
     private const int _foodMax = 5;
-    private const float _sleepMultiplier = -2.0f;
     private const float _eatInterval = 1.0f;
     private const float _hungerInterval = 3.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
     public int _foodCurrent = 0;
+    
+    private float _hungerElapsed = 0.0f;
+    private float _eatingElapsed = 0.0f;
+    public PlayerState _state = PlayerState.IDLE;
 
-    [HideInInspector]
-    public float _hungerElapsed = 0.0f;
-    [HideInInspector]
-    public bool _sleeping = false;
-    [HideInInspector]
-    public bool _eating = false;
-    [HideInInspector]
-    public float _eatingElapsed = 0.0f;
+    //[HideInInspector]
+    //public bool _sleeping = false;
+    //[HideInInspector]
+    //public bool _eating = false;
+    //[HideInInspector]
+    //public bool _hiding = false;
     [HideInInspector]
     public Stack<Tile> _path = null;
     [HideInInspector]
@@ -47,6 +48,12 @@ public class Player : MonoBehaviour
     // Designer
     private Rigidbody _rigidbody;
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
+
+    public enum PlayerState
+    {
+        IDLE, WALKING, SLEEPING, EATING, HIDING
+    }
 
     void Start()
     {
@@ -58,13 +65,16 @@ public class Player : MonoBehaviour
         {
             _animator = GetComponent<Animator>();
         }
+        if (!_spriteRenderer)
+        {
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
         _tiredCurrent = 0.0f;
         _foodCurrent = 0;
         _hungerElapsed = 0.0f;
-        _sleeping = false;
-        _eating = false;
         _eatingElapsed = 0.0f;
+        _state = PlayerState.IDLE;
         _path = null;
         _originTile = null;
         _targetTile = null;
@@ -90,14 +100,17 @@ public class Player : MonoBehaviour
 
         float deltaTime = Time.deltaTime;
 
-        _sleeping = _sleeping ^ Input.GetButtonDown("Fire2");
+        if (Input.GetButtonDown("Fire2"))
+        {
+            _state = (_state == PlayerState.SLEEPING) ? PlayerState.IDLE : PlayerState.SLEEPING;
+        }
 
         //if (Input.GetButtonDown("Fire3"))
         //{
         //    StartEating();
         //}
 
-        if (_eating)
+        if (_state == PlayerState.EATING)
         {
             _eatingElapsed += deltaTime;
             if (_eatingElapsed >= _eatInterval)
@@ -112,7 +125,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    _eating = false;
+                    _state = PlayerState.IDLE;
                 }
             }
         }
@@ -124,10 +137,31 @@ public class Player : MonoBehaviour
             _foodCurrent = Mathf.Clamp(_foodCurrent - 1, 0, _foodMax);
         }
 
-        _tiredCurrent = Mathf.Clamp(
-            _tiredCurrent + (_sleeping ? deltaTime * _sleepMultiplier : deltaTime),
-            0.0f, _tiredMax
+        _tiredCurrent = Mathf.Max(
+            0.0f, _tiredCurrent + deltaTime * GetSleepMultiplier()
         );
+        if (_tiredCurrent >= _tiredMax)
+        {
+            _tiredCurrent = _tiredMax;
+            _state = PlayerState.SLEEPING;
+            _path = null;
+            _originTile = null;
+            _targetTile = null;
+        }
+    }
+
+    private float GetSleepMultiplier()
+    {
+        switch (_state)
+        {
+            case PlayerState.SLEEPING:
+            case PlayerState.HIDING:
+                return -2.0f;
+            case PlayerState.WALKING:
+                return 1.0f;
+            default:
+                return 0.25f;
+        }
     }
 
     void FixedUpdate()
@@ -143,8 +177,7 @@ public class Player : MonoBehaviour
             vertical * _moveSpeed
         );
         */
-
-        bool walking = false;
+        
         if (_path != null && _path.Count > 0)
         {
             Vector3 currentPos = transform.position;
@@ -152,9 +185,10 @@ public class Player : MonoBehaviour
             float moveDistance = 0.0f;
             do
             {
-                nextPos = _path.Peek().transform.position;
+                Tile nextTile = _path.Peek();
+                nextPos = nextTile.transform.position;
                 moveDistance = Vector3.Distance(currentPos, nextPos);
-                if (moveDistance <= 0.5f)
+                if (moveDistance <= 0.2f)
                 {
                     _path.Pop();
                 }
@@ -164,8 +198,15 @@ public class Player : MonoBehaviour
                 }
             } while (_path.Count > 0);
 
-            if (moveDistance > 0.5f)
+            if (moveDistance > 0.2f)
             {
+                if (_path.Count <= 1 &&
+                    _targetTile.GetComponentInChildren<HidingBush>() != null)
+                {
+                    nextPos += Vector3.forward * 0.1f;
+                    moveDistance = Vector3.Distance(currentPos, nextPos);
+                }
+
                 if (_moveSpeed < moveDistance)
                 {
                     moveDistance = _moveSpeed;
@@ -175,11 +216,10 @@ public class Player : MonoBehaviour
                     (_moveSpeed < moveDistance) ?
                     (nextPos - currentPos) :
                     (nextPos - currentPos).normalized * _moveSpeed;
-
+                
                 _rigidbody.MovePosition(currentPos + moveVector * deltaTime);
                 _rigidbody.velocity = Vector3.zero;
-                _sleeping = false;
-                walking = true;
+                //_state = PlayerState.WALKING;
 
                 if (moveVector.x > 0.0f)
                 {
@@ -190,32 +230,47 @@ public class Player : MonoBehaviour
                     transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
                 }
             }
+            else
+            {
+                _state = PlayerState.IDLE;
+            }
 
             if (_path.Count == 0)
             {
                 StartEating();
+                StartHiding();
             }
         }
 
-        _animator.SetBool("walking", walking);
-        _animator.SetBool("sleeping", _sleeping);
+        _animator.SetBool("walking", _state == PlayerState.WALKING);
+        _animator.SetBool("sleeping", _state == PlayerState.SLEEPING || _state == PlayerState.HIDING);
     }
     
     public void StartEating()
     {
-        if (!_eating && _targetTile != null)
+        if (_state != PlayerState.EATING && _targetTile != null)
         {
             var tree = _targetTile.GetComponentInChildren<FruitTree>();
-            Debug.Log(tree != null ? "tree found" : "tree not found");
 
             if (_foodCurrent < _foodMax && tree != null && tree.EatFruit())
             {
                 _foodCurrent += 1;
                 _animator.SetTrigger("eating");
 
-                _sleeping = false;
-                _eating = true;
+                _state = PlayerState.EATING;
                 _eatingElapsed = 0.0f;
+            }
+        }
+    }
+
+    public void StartHiding()
+    {
+        if (_state != PlayerState.HIDING && _targetTile != null)
+        {
+            var bush = _targetTile.GetComponentInChildren<HidingBush>();
+            if (bush != null)
+            {
+                _state = PlayerState.HIDING;
             }
         }
     }

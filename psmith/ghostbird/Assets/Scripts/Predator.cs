@@ -10,7 +10,7 @@ public class Predator : MonoBehaviour
     // Designer
     private Rigidbody _rigidbody;
     private Sector _sector = null;
-    private Player _player = null;
+    //private Player _player = null;
 
     // Game state
     private Stack<Tile> _path = null;
@@ -26,7 +26,7 @@ public class Predator : MonoBehaviour
         }
 
         _sector = GameObject.FindObjectOfType<Sector>();
-        _player = GameObject.FindObjectOfType<Player>();
+        //_player = GameObject.FindObjectOfType<Player>();
 
         _path = null;
         _originTile = null;

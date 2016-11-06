@@ -9,7 +9,7 @@ public class Sector : MonoBehaviour {
 
     // Designer
     private Tile[] _tiles = new Tile[0];
-    private Door[] _doors = new Door[0];
+    //private Door[] _doors = new Door[0];
     public RoomLink[] _roomLinks = new RoomLink[0];
 
     [System.Serializable]
@@ -22,7 +22,7 @@ public class Sector : MonoBehaviour {
 
     void Start () {
         _tiles = GetComponentsInChildren<Tile>();
-        _doors = GetComponentsInChildren<Door>();
+        //_doors = GetComponentsInChildren<Door>();
     }
 
     public Tile GetClosestTile(Vector3 pos)
@@ -108,7 +108,7 @@ public class Sector : MonoBehaviour {
             for (int i = 0; i <= maxIterations && heap.Count > 0; ++i)
             {
                 PathNode current = heap[0];
-                Vector3 currentPos = current.pos;
+                //Vector3 currentPos = current.pos;
                 Tile currentTile = current.tile;
                 heap.RemoveAt(0);
                 visitedTiles.Add(currentTile);
