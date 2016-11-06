@@ -23,7 +23,6 @@ public class Event1OutTrigger : MonoBehaviour {
     {
         if (isTriggered && !isDismissed)
         {
-            Debug.Log("Update is triggered. triggerTime=" + triggerTime + "; curtime=" + Time.time);
             string str = "";
             if (Time.time < triggerTime + TEXT_UPTIME)
             {
@@ -42,7 +41,6 @@ public class Event1OutTrigger : MonoBehaviour {
                 introspectionText.enabled = false;
                 introspectionText.gameObject.SetActive(false);
                 introspectionText.text = str;
-                Debug.Log("Dismissed!");
             } else if (str.Length > 0)
             {
                 introspectionContainer.enabled = true;
@@ -50,17 +48,14 @@ public class Event1OutTrigger : MonoBehaviour {
                 introspectionText.enabled = true;
                 introspectionText.gameObject.SetActive(true);
                 introspectionText.text = str;
-                Debug.Log("The text has been set sir!");
             }
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered an enter!");
         if (!isTriggered && string.Equals(Player.PLAYER_TAG, other.tag))
         {
-            Debug.Log("It's a player!");
             isTriggered = true;
             triggerTime = Time.time;
         }
