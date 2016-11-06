@@ -51,7 +51,7 @@ public class IntroAct1 : MonoBehaviour {
         }
         else if (timeElapsed >= 3f && timeElapsed < 6f)
         {
-            introspectionStr = "Do I regret? I do not know. There is no time to dwell upon it.";
+            introspectionStr = "Do I regret? I do not know. There is no time to think.";
         }
         else if (timeElapsed >= 6f && timeElapsed < 9f)
         {
