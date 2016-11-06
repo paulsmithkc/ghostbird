@@ -26,7 +26,7 @@ GameObject:
   - 114: {fileID: 114000011488674200}
   m_Layer: 0
   m_Name: Baby
-  m_TagString: Player
+  m_TagString: Baby
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
+  _foodCurrent: 0
 --- !u!135 &135000010782880642
 SphereCollider:
   m_ObjectHideFlags: 1

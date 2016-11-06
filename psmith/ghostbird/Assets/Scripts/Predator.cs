@@ -6,9 +6,11 @@ using System.Linq;
 public class Predator : MonoBehaviour
 {
     private const float _moveSpeed = 0.5f;
+    private const float _attackDelay = 5.0f;
 
     // Designer
     private Rigidbody _rigidbody;
+    private Animator _animator;
     private Sector _sector = null;
     //private Player _player = null;
 
@@ -17,12 +19,18 @@ public class Predator : MonoBehaviour
     private Tile _originTile = null;
     private Tile _targetTile = null;
     private Tile _previousTarget = null;
+    private float _attackElapsed = 0.0f;
+    private bool _attacking = false;
 
     void Start()
     {
         if (!_rigidbody)
         {
             _rigidbody = GetComponent<Rigidbody>();
+        }
+        if (!_animator)
+        {
+            _animator = GetComponent<Animator>();
         }
 
         _sector = GameObject.FindObjectOfType<Sector>();
@@ -32,10 +40,23 @@ public class Predator : MonoBehaviour
         _originTile = null;
         _targetTile = null;
         _previousTarget = null;
+        _attackElapsed = 0.0f;
+        _attacking = false;
     }
 
     void Update()
     {
+        float deltaTime = Time.deltaTime;
+
+        if (!_attacking)
+        {
+            _attackElapsed += deltaTime;
+            if (_attackElapsed >= _attackDelay)
+            {
+                OnAttackStart();
+            }
+        }
+
         if (_path == null || _path.Count <= 0)
         {
             _originTile = _sector.GetClosestTile(this.transform.position);
@@ -136,6 +157,35 @@ public class Predator : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case Player.PLAYER_TAG:
+                if (!_attacking)
+                {
+                    OnAttackStart();
+                }
+                else
+                {
+                    var player = other.gameObject.GetComponent<Player>();
+                    player._state = Player.PlayerState.DEAD;
+                }
+                break;
+            case Player.BABY_TAG:
+                if (!_attacking)
+                {
+                    OnAttackStart();
+                }
+                else
+                {
+                    var baby = other.gameObject.GetComponent<Baby>();
+                    baby._state = Baby.BabyState.DEAD;
+                }
+                break;
+        }
+    }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
@@ -159,5 +209,18 @@ public class Predator : MonoBehaviour
                 currentPos = nextPos;
             }
         }
+    }
+
+
+    public void OnAttackStart()
+    {
+        _attackElapsed = 0.0f;
+        _animator.SetTrigger("attack");
+        _attacking = true;
+    }
+
+    public void OnAttackEnd()
+    {
+        _attacking = false;
     }
 }
