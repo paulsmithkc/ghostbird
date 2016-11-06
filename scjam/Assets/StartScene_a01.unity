@@ -243,7 +243,7 @@ GameObject:
   - 114: {fileID: 549198108}
   - 114: {fileID: 549198112}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas_Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -346,7 +346,7 @@ GameObject:
   - 222: {fileID: 998298576}
   - 114: {fileID: 998298575}
   m_Layer: 5
-  m_Name: Text_Start
+  m_Name: Text_Quit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
