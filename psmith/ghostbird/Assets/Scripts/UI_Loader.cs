@@ -4,9 +4,14 @@ using System.Collections;
 
 public class UI_Loader : MonoBehaviour {
 
-	public void LoadScene(int sceneValue)
+	public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneValue);
+        SceneManager.LoadScene(sceneName);
         Time.timeScale = 1f;
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
