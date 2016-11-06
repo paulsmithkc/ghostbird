@@ -15,8 +15,12 @@ public class Player : MonoBehaviour
 
     // Physicis Tuning
     private const float _moveSpeed = 2.0f;
+    private const float _tiredMax = 15.0f;
+    private const float _sleepMultiplier = -2.0f;
 
     // Game State
+    //[HideInInspector]
+    public float _tiredCurrent = 0.0f;
     [HideInInspector]
     public bool _sleeping = false;
     [HideInInspector]
@@ -41,6 +45,7 @@ public class Player : MonoBehaviour
             _animator = GetComponent<Animator>();
         }
 
+        _tiredCurrent = 0.0f;
         _sleeping = false;
         _path = null;
         _originTile = null;
@@ -49,6 +54,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        float deltaTime = Time.deltaTime;
+
         _sleeping = _sleeping ^ Input.GetButtonDown("Fire2");
 
         if (Input.GetButtonDown("Fire3"))
@@ -56,6 +63,11 @@ public class Player : MonoBehaviour
             _sleeping = false;
             _animator.SetTrigger("eating");
         }
+
+        _tiredCurrent = Mathf.Clamp(
+            _tiredCurrent + (_sleeping ? deltaTime * _sleepMultiplier : deltaTime),
+            0.0f, _tiredMax
+        );
     }
 
     void FixedUpdate()
@@ -107,6 +119,15 @@ public class Player : MonoBehaviour
                 _rigidbody.velocity = Vector3.zero;
                 _sleeping = false;
                 walking = true;
+
+                if (moveVector.x > 0.0f)
+                {
+                    transform.localScale = Vector3.one;
+                }
+                else if (moveVector.x < 0.0f)
+                {
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                }
             }
         }
 
