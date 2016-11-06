@@ -81,6 +81,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656dcafe504b4dc418049aebafbd8f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _predatorOccupancy: 0
+  _passable: 0
   _width: 2
   _height: 2
   _adjacentRooms: []
