@@ -13,7 +13,7 @@ public class Predator : MonoBehaviour
     private Player _player = null;
 
     // Game state
-    private List<Tile> _path = null;
+    private Stack<Tile> _path = null;
     private Tile _originTile = null;
     private Tile _targetTile = null;
     private Tile _previousTarget = null;
@@ -74,8 +74,8 @@ public class Predator : MonoBehaviour
             {
                 _previousTarget = _targetTile;
                 _targetTile = target;
-                _path = new List<Tile>();
-                _path.Add(_targetTile);
+                _path = new Stack<Tile>();
+                _path.Push(_targetTile);
             }
             
             //_targetTile = _sector.GetClosestTile(_player.transform.position);
@@ -94,11 +94,11 @@ public class Predator : MonoBehaviour
             float moveDistance = 0.0f;
             do
             {
-                nextPos = _path[0].transform.position;
+                nextPos = _path.Peek().transform.position;
                 moveDistance = Vector3.Distance(currentPos, nextPos);
                 if (moveDistance <= 0.5f)
                 {
-                    _path.RemoveAt(0);
+                    _path.Pop();
                 }
                 else
                 {

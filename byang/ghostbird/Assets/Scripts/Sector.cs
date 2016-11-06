@@ -92,7 +92,7 @@ public class Sector : MonoBehaviour {
         }
     }
 
-    public List<Tile> FindShortestPath(Tile origin, Tile target, int maxIterations)
+    public Stack<Tile> FindShortestPath(Tile origin, Tile target, int maxIterations)
     {
         if (origin != null && target != null && _tiles != null)
         {
@@ -115,11 +115,11 @@ public class Sector : MonoBehaviour {
                 foreach (var t in GetAdjacentTiles(currentTile))
                 {
                     if (t == target) {
-                        var path = new List<Tile>();
-                        path.Add(t);
+                        var path = new Stack<Tile>();
+                        path.Push(t);
                         while (current != null)
                         {
-                            path.Add(current.tile);
+                            path.Push(current.tile);
                             current = current.previous;
                         }
                         return path;

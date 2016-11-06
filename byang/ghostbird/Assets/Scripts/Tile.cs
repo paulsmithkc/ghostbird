@@ -21,16 +21,24 @@ public class Tile : MonoBehaviour {
         _predatorOccupancy = 0;
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
         var sector = GameObject.FindObjectOfType<Sector>();
         var player = GameObject.FindObjectOfType<Player>();
 
-        player._originTile = this;
-        player._targetTile = sector.GetClosestTile(player.transform.position);
-        player._path = sector.FindShortestPath(this, player._targetTile, 100);
+        player._originTile = sector.GetClosestTile(player.transform.position);
+        player._targetTile = this;
 
-        Debug.Log("down");
+        if (player._originTile != player._targetTile)
+        {
+            player._path = sector.FindShortestPath(player._originTile, this, 100);
+            player._sleeping = false;
+            player._eating = false;
+        }
+        else if (player._targetTile != null)
+        {
+            player.StartEating();
+        }
     }
 
     void OnTriggerEnter(Collider other)
