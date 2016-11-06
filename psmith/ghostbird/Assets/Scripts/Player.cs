@@ -101,6 +101,16 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown(PAUSE_INPUT))
         {
             Time.timeScale = (Time.timeScale == 0.0f ? 1.0f : 0.0f);
+            
+            var controller = GameObject.FindObjectOfType<UI_Controller>();
+            if (Time.timeScale == 0.0f)
+            {
+                controller.PauseGame();
+            }
+            else
+            {
+                controller.ResumeGame();
+            }
         }
 
         float deltaTime = Time.deltaTime;
