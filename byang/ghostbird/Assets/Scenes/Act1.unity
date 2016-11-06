@@ -1533,7 +1533,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!1001 &680376816
 Prefab:
   m_ObjectHideFlags: 0
@@ -2214,14 +2214,13 @@ GameObject:
   - 223: {fileID: 1123817062}
   - 114: {fileID: 1123817061}
   - 114: {fileID: 1123817060}
-  - 114: {fileID: 1123817064}
   m_Layer: 5
   m_Name: GoalCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1123817060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2292,25 +2291,12 @@ RectTransform:
   - {fileID: 1219105069}
   - {fileID: 278060293}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1123817064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1123817059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b17996301f876f645be67724170d2fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sun: {fileID: 278060294}
-  cloud: {fileID: 2063755164}
 --- !u!1 &1152449607
 GameObject:
   m_ObjectHideFlags: 0
@@ -2507,6 +2493,55 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!1 &1386310380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1386310382}
+  - 114: {fileID: 1386310381}
+  m_Layer: 0
+  m_Name: GoalCanvasDriver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1386310381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1386310380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b17996301f876f645be67724170d2fd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1123817062}
+  sky: {fileID: 1219105070}
+  sun: {fileID: 278060294}
+  cloud: {fileID: 2063755164}
+  smallSun: {fileID: 21300000, guid: 3cc136181ca4e8a4da3c873d1a61c1a6, type: 3}
+  medSun: {fileID: 21300000, guid: 65f1365958d283143b8e207304d1cc42, type: 3}
+  bigSun: {fileID: 21300000, guid: a38338669100d234c95ecaee604aa723, type: 3}
+  partCloud: {fileID: 21300000, guid: 01df4867b3001784089694954901cdf0, type: 3}
+  fullCloud: {fileID: 21300000, guid: 4ba59612b074da547bb9130c56c47224, type: 3}
+--- !u!4 &1386310382
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1386310380}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
 --- !u!1001 &1539615114
 Prefab:
   m_ObjectHideFlags: 0
@@ -3234,7 +3269,7 @@ RectTransform:
   - {fileID: 583311395}
   - {fileID: 1763535237}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
