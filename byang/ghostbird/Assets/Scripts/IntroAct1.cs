@@ -13,9 +13,10 @@ public class IntroAct1 : MonoBehaviour {
     public HudFade fader;
     private Transform cameraTransform;
     private float timeElapsed;
+    private bool isDismissed;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         cameraTransform = Camera.main.transform;
         cameraTransform.position = eyeShotCameraSnapTransform.position;
         timeElapsed = 0f;
@@ -23,6 +24,7 @@ public class IntroAct1 : MonoBehaviour {
         introspectionContainer.gameObject.SetActive(true);
         introspectionText.enabled = true;
         introspectionText.gameObject.SetActive(true);
+        isDismissed = false;
     }
 	
 	// Update is called once per frame
@@ -35,6 +37,8 @@ public class IntroAct1 : MonoBehaviour {
         DoZoomOutToShowBigBird();
         DoZoomOutToShowBirdsFlyingAndLevelContext();
         DoGiveGoalScreenHint();
+
+        DoFollowPlayerWithCamera();
     }
 
     void DoIntrospection()
@@ -58,11 +62,22 @@ public class IntroAct1 : MonoBehaviour {
             introspectionStr = "Winter approaches.";
         }
 
-        introspectionContainer.enabled = introspectionStr.Length > 0;
-        introspectionContainer.gameObject.SetActive(introspectionStr.Length > 0);
-        introspectionText.enabled = introspectionStr.Length > 0;
-        introspectionText.gameObject.SetActive(introspectionStr.Length > 0);
-        introspectionText.text = introspectionStr;
+        if (introspectionStr.Length > 0)
+        {
+            introspectionContainer.enabled = introspectionStr.Length > 0;
+            introspectionContainer.gameObject.SetActive(introspectionStr.Length > 0);
+            introspectionText.enabled = introspectionStr.Length > 0;
+            introspectionText.gameObject.SetActive(introspectionStr.Length > 0);
+            introspectionText.text = introspectionStr;
+        } else if (!isDismissed && timeElapsed >= 12f)
+        {
+            isDismissed = true;
+            introspectionContainer.enabled = introspectionStr.Length > 0;
+            introspectionContainer.gameObject.SetActive(introspectionStr.Length > 0);
+            introspectionText.enabled = introspectionStr.Length > 0;
+            introspectionText.gameObject.SetActive(introspectionStr.Length > 0);
+            introspectionText.text = introspectionStr;
+        }
     }
 
     void DoFadeInFromWhite()
@@ -97,6 +112,14 @@ public class IntroAct1 : MonoBehaviour {
     void DoGiveGoalScreenHint()
     {
 
+    }
+
+    void DoFollowPlayerWithCamera()
+    {
+        if (timeElapsed >= 18f)
+        {
+            cameraTransform.position = fullLevelCameraSnapTransform.position;
+        }
     }
 
 
