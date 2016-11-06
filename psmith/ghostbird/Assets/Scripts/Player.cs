@@ -334,4 +334,14 @@ public class Player : MonoBehaviour
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case Player.PREDATOR_TAG:
+                _state = PlayerState.DEAD;
+                break;
+        }
+    }
 }

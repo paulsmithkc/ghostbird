@@ -190,4 +190,14 @@ public class Baby : MonoBehaviour {
             }
         }
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case Player.PREDATOR_TAG:
+                _state = BabyState.DEAD;
+                break;
+        }
+    }
 }
