@@ -18,11 +18,11 @@ public class Player : MonoBehaviour
     public const string PREDATOR_TAG = "Predator";
 
     // Physicis Tuning
-    private const float _moveSpeed = 2.0f;
-    private const float _tiredMax = 10.0f;
-    private const int _foodMax = 5;
-    private const float _eatInterval = 1.0f;
-    private const float _hungerInterval = 3.0f;
+    public const float _moveSpeed = 2.0f;
+    public const float _tiredMax = 10.0f;
+    public const int _foodMax = 5;
+    public const float _eatInterval = 1.0f;
+    public const float _hungerInterval = 3.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
@@ -48,11 +48,11 @@ public class Player : MonoBehaviour
     // Designer
     private Rigidbody _rigidbody;
     private Animator _animator;
-    private SpriteRenderer _spriteRenderer;
+    //private SpriteRenderer _spriteRenderer;
 
     public enum PlayerState
     {
-        IDLE, WALKING, SLEEPING, EATING, HIDING
+        IDLE, WALKING, SLEEPING, EATING, HIDING, DEAD
     }
 
     void Start()
@@ -65,13 +65,13 @@ public class Player : MonoBehaviour
         {
             _animator = GetComponent<Animator>();
         }
-        if (!_spriteRenderer)
-        {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-        }
+        //if (!_spriteRenderer)
+        //{
+        //    _spriteRenderer = GetComponent<SpriteRenderer>();
+        //}
 
         _tiredCurrent = 0.0f;
-        _foodCurrent = 0;
+        _foodCurrent = _foodMax;
         _hungerElapsed = 0.0f;
         _eatingElapsed = 0.0f;
         _state = PlayerState.IDLE;
@@ -93,9 +93,24 @@ public class Player : MonoBehaviour
             OnRestart();
             return;
         }
+
+        if (_state == PlayerState.DEAD)
+        {
+            return;
+        }
         if (Input.GetButtonDown(PAUSE_INPUT))
         {
             Time.timeScale = (Time.timeScale == 0.0f ? 1.0f : 0.0f);
+            
+            var controller = GameObject.FindObjectOfType<UI_Controller>();
+            if (Time.timeScale == 0.0f)
+            {
+                controller.PauseGame();
+            }
+            else
+            {
+                controller.ResumeGame();
+            }
         }
 
         float deltaTime = Time.deltaTime;
@@ -135,6 +150,10 @@ public class Player : MonoBehaviour
         {
             _hungerElapsed -= _hungerInterval;
             _foodCurrent = Mathf.Clamp(_foodCurrent - 1, 0, _foodMax);
+            if (_foodCurrent <= 0)
+            {
+                _state = PlayerState.DEAD;
+            }
         }
 
         _tiredCurrent = Mathf.Max(
@@ -166,6 +185,11 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (_state == PlayerState.DEAD)
+        {
+            return;
+        }
+
         float deltaTime = Time.fixedDeltaTime;
 
         //float horizontal = Input.GetAxis(HORIZONTAL_INPUT);
@@ -277,6 +301,11 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (_state == PlayerState.DEAD)
+        {
+            return;
+        }
+
         Gizmos.color = Color.magenta;
 
         if (_originTile != null)
