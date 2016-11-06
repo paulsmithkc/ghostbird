@@ -14,10 +14,11 @@ public class Player : MonoBehaviour
     public const string PREDATOR_TAG = "Predator";
 
     // Physicis Tuning
-    private const float _moveSpeed = 4.0f;
+    private const float _moveSpeed = 2.0f;
 
     // Game State
-
+    [HideInInspector]
+    public bool _sleeping = false;
     [HideInInspector]
     public List<Tile> _path = null;
     [HideInInspector]
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
 
     // Designer
     private Rigidbody _rigidbody;
+    private Animator _animator;
 
     void Start()
     {
@@ -34,7 +36,12 @@ public class Player : MonoBehaviour
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
+        if (!_animator)
+        {
+            _animator = GetComponent<Animator>();
+        }
 
+        _sleeping = false;
         _path = null;
         _originTile = null;
         _targetTile = null;
@@ -42,6 +49,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        _sleeping = _sleeping ^ Input.GetButtonDown("Fire2");
+
+        if (Input.GetButtonDown("Fire3"))
+        {
+            _sleeping = false;
+            _animator.SetTrigger("eating");
+        }
     }
 
     void FixedUpdate()
@@ -58,6 +72,7 @@ public class Player : MonoBehaviour
         );
         */
 
+        bool walking = false;
         if (_path != null && _path.Count > 0)
         {
             Vector3 currentPos = transform.position;
@@ -90,8 +105,13 @@ public class Player : MonoBehaviour
 
                 _rigidbody.MovePosition(currentPos + moveVector * deltaTime);
                 _rigidbody.velocity = Vector3.zero;
+                _sleeping = false;
+                walking = true;
             }
         }
+
+        _animator.SetBool("walking", walking);
+        _animator.SetBool("sleeping", _sleeping);
     }
 
     void OnDrawGizmos()

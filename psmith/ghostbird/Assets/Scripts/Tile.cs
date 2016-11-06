@@ -41,7 +41,7 @@ public class Tile : MonoBehaviour {
                 ++_predatorOccupancy;
                 break;
             case Player.PLAYER_TAG:
-                --_predatorOccupancy;
+                //--_predatorOccupancy;
                 break;
         }
     }

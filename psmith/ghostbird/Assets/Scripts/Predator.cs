@@ -5,7 +5,7 @@ using System.Linq;
 
 public class Predator : MonoBehaviour
 {
-    private const float _moveSpeed = 4.0f;
+    private const float _moveSpeed = 2.0f;
 
     // Designer
     private Rigidbody _rigidbody;
