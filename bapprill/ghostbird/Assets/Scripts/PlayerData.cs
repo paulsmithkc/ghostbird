@@ -1,48 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerData : ScriptableObject {
+public class PlayerData : ScriptableObject
+{
+    public int playerFood;
+    public int babyFood;
+    public int sleepLevel;
 
-    private int playerFood;
-    private int babyFood;
-    private int sleepFood;
+    private int playerFoodPause;
+    private int babyFoodPause;
+    private int sleepLevelPause;
 
-    public int PlayerFood
+    public float cutSceneBuffer = 20f;
+
+    public float dataTimer = 0f;
+    
+    public void SetPauseValues()
     {
-        get
-        {
-            return playerFood;
-        }
-
-        set
-        {
-            playerFood = value;
-        }
+        playerFoodPause = playerFood;
+        babyFoodPause = babyFood;
+        sleepLevelPause = sleepLevel;
     }
 
-    public int BabyFood
+    private void HoldPauseValues()
     {
-        get
-        {
-            return babyFood;
-        }
-
-        set
-        {
-            babyFood = value;
-        }
+        playerFood = playerFoodPause;
+        babyFoodPause = babyFood;
+        sleepLevelPause = sleepLevel;
     }
 
-    public int SleepFood
+    public void StallResourceProgression(float deltaTime)
     {
-        get
-        {
-            return sleepFood;
-        }
+        dataTimer += deltaTime;
 
-        set
+        if(dataTimer < cutSceneBuffer)
         {
-            sleepFood = value;
+
         }
     }
 }
