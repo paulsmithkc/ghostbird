@@ -19,10 +19,10 @@ public class Player : MonoBehaviour
 
     // Physicis Tuning
     public const float _moveSpeed = 2.0f;
-    public const float _tiredMax = 10.0f;
+    public const float _tiredMax = 15.0f;
     public const int _foodMax = 5;
     public const float _eatInterval = 1.0f;
-    public const float _hungerInterval = 3.0f;
+    public const float _hungerInterval = 6.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
