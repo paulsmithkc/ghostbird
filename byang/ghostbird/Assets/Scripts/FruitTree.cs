@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FruitTree : MonoBehaviour {
+public class FruitTree : TileObject
+{
     public GameObject _eatIcon = null;
     public GameObject[] _fruits = new GameObject[0];
     private int _fruitsEaten = 0;
@@ -12,7 +13,7 @@ public class FruitTree : MonoBehaviour {
         _fruitsEaten = 0;
     }
 
-    public void OnMouseEnter()
+    public override void OnMouseEnter()
     {
         if (_fruitsEaten < _fruits.Length)
         {
@@ -20,12 +21,12 @@ public class FruitTree : MonoBehaviour {
         }
     }
 
-    public void OnMouseExit()
+    public override void OnMouseExit()
     {
         _eatIcon.SetActive(false);
     }
 
-    public void OnMouseDown()
+    public override void OnMouseDown()
     {
         var tile = this.GetComponentInParent<Tile>();
         if (tile != null)
