@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 public class Baby : MonoBehaviour {
 
-    private const float _moveSpeed = 2.0f;
+    // Physicis Tuning
+    public const float _moveSpeed = 2.0f;
+    public const int _foodMax = 5;
+    public const float _hungerInterval = 3.0f;
 
     private Sector _sector = null;
     private Player _player = null;
@@ -12,13 +15,15 @@ public class Baby : MonoBehaviour {
     private Animator _animator;
 
     public BabyState _state = BabyState.IDLE;
+    public int _foodCurrent = 0;
+    private float _hungerElapsed = 0.0f;
     private Stack<Tile> _path = null;
     private Tile _originTile = null;
     private Tile _targetTile = null;
     
     public enum BabyState
     {
-        IDLE, WALKING, SLEEPING, EATING, HIDING
+        IDLE, WALKING, SLEEPING, EATING, HIDING, DEAD
     }
 
     void Start () {
@@ -35,6 +40,8 @@ public class Baby : MonoBehaviour {
         }
         
         _state = BabyState.IDLE;
+        _foodCurrent = _foodMax;
+        _hungerElapsed = 0.0f;
         _path = null;
         _originTile = null;
         _targetTile = null;
@@ -42,6 +49,13 @@ public class Baby : MonoBehaviour {
 
     void Update()
     {
+        if (_state == BabyState.DEAD)
+        {
+            return;
+        }
+
+        float deltaTime = Time.deltaTime;
+
         Tile originTile = _sector.GetClosestTile(this.transform.position);
         Tile targetTile = _sector.GetClosestTile(_player.transform.position);
 
@@ -51,10 +65,26 @@ public class Baby : MonoBehaviour {
             _targetTile = targetTile;
             _path = _sector.FindShortestPath(_originTile, _targetTile, 100);
         }
+
+        _hungerElapsed += deltaTime;
+        if (_hungerElapsed >= _hungerInterval)
+        {
+            _hungerElapsed -= _hungerInterval;
+            _foodCurrent = Mathf.Clamp(_foodCurrent - 1, 0, _foodMax);
+            if (_foodCurrent <= 0)
+            {
+                _state = BabyState.DEAD;
+            }
+        }
     }
 
     void FixedUpdate()
     {
+        if (_state == BabyState.DEAD)
+        {
+            return;
+        }
+
         float deltaTime = Time.fixedDeltaTime;
         
         if (_path != null && _path.Count > 0)
@@ -133,6 +163,11 @@ public class Baby : MonoBehaviour {
 
     void OnDrawGizmos()
     {
+        if (_state == BabyState.DEAD)
+        {
+            return;
+        }
+
         Gizmos.color = Color.magenta;
 
         if (_originTile != null)

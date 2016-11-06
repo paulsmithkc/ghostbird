@@ -18,11 +18,11 @@ public class Player : MonoBehaviour
     public const string PREDATOR_TAG = "Predator";
 
     // Physicis Tuning
-    private const float _moveSpeed = 2.0f;
-    private const float _tiredMax = 10.0f;
-    private const int _foodMax = 5;
-    private const float _eatInterval = 1.0f;
-    private const float _hungerInterval = 3.0f;
+    public const float _moveSpeed = 2.0f;
+    public const float _tiredMax = 10.0f;
+    public const int _foodMax = 5;
+    public const float _eatInterval = 1.0f;
+    public const float _hungerInterval = 3.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
 
     public enum PlayerState
     {
-        IDLE, WALKING, SLEEPING, EATING, HIDING
+        IDLE, WALKING, SLEEPING, EATING, HIDING, DEAD
     }
 
     void Start()
@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
         //}
 
         _tiredCurrent = 0.0f;
-        _foodCurrent = 0;
+        _foodCurrent = _foodMax;
         _hungerElapsed = 0.0f;
         _eatingElapsed = 0.0f;
         _state = PlayerState.IDLE;
@@ -91,6 +91,11 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown(RESTART_INPUT))
         {
             OnRestart();
+            return;
+        }
+
+        if (_state == PlayerState.DEAD)
+        {
             return;
         }
         if (Input.GetButtonDown(PAUSE_INPUT))
@@ -135,6 +140,10 @@ public class Player : MonoBehaviour
         {
             _hungerElapsed -= _hungerInterval;
             _foodCurrent = Mathf.Clamp(_foodCurrent - 1, 0, _foodMax);
+            if (_foodCurrent <= 0)
+            {
+                _state = PlayerState.DEAD;
+            }
         }
 
         _tiredCurrent = Mathf.Max(
@@ -166,6 +175,11 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (_state == PlayerState.DEAD)
+        {
+            return;
+        }
+
         float deltaTime = Time.fixedDeltaTime;
 
         //float horizontal = Input.GetAxis(HORIZONTAL_INPUT);
@@ -277,6 +291,11 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (_state == PlayerState.DEAD)
+        {
+            return;
+        }
+
         Gizmos.color = Color.magenta;
 
         if (_originTile != null)
