@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class Baby : MonoBehaviour {
 
     // Physicis Tuning
-    public const float _moveSpeed = 2.0f;
+    public const float _moveSpeed = 1.5f;
     public const int _foodMax = 5;
-    public const float _hungerInterval = 3.0f;
+    public const float _hungerInterval = 24.0f;
 
     private Sector _sector = null;
     private Player _player = null;
@@ -17,7 +17,7 @@ public class Baby : MonoBehaviour {
     public BabyState _state = BabyState.IDLE;
     public int _foodCurrent = 0;
     private float _hungerElapsed = 0.0f;
-    private Stack<Tile> _path = null;
+    private List<Tile> _path = null;
     private Tile _originTile = null;
     private Tile _targetTile = null;
     
@@ -86,47 +86,72 @@ public class Baby : MonoBehaviour {
         }
 
         float deltaTime = Time.fixedDeltaTime;
-        
-        if (_path != null && _path.Count > 0)
+
+        int minTilesAway;
+        switch (_player._state)
+        {
+            case Player.PlayerState.SLEEPING:
+            case Player.PlayerState.HIDING:
+                minTilesAway = 0;
+                break;
+            default:
+                minTilesAway = 1;
+                break;
+        }
+
+
+        if (_path != null && _path.Count > minTilesAway)
         {
             Vector3 currentPos = transform.position;
             Vector3 nextPos = currentPos;
             float moveDistance = 0.0f;
+            float moveTolerance = 0.4f;
             do
             {
-                Tile nextTile = _path.Peek();
+                Tile nextTile = _path[_path.Count - 1];
                 nextPos = nextTile.transform.position;
                 moveDistance = Vector3.Distance(currentPos, nextPos);
-                if (moveDistance <= 0.2f)
-                {
-                    _path.Pop();
-                }
-                else
-                {
-                    break;
-                }
-            } while (_path.Count > 0);
 
-            if (moveDistance > 0.2f)
-            {
+                // Avoid walking backwards
+                if (_path.Count >= 2)
+                {
+                    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
+                    Vector3 moveVector = nextPos - currentPos;
+                    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
+                    {
+                        //Debug.Log("Baby moving backwards");
+                        _path.RemoveAt(_path.Count - 1);
+                        continue;
+                    }
+                }
+
+                // Hide Behind bushes
                 if (_path.Count <= 1 &&
                     _targetTile.GetComponentInChildren<HidingBush>() != null)
                 {
                     nextPos += Vector3.forward * 0.1f;
                     moveDistance = Vector3.Distance(currentPos, nextPos);
+                    moveTolerance = 0.2f;
                 }
-
-                if (_moveSpeed < moveDistance)
+                
+                // Close enough, move toward the next tile
+                if (moveDistance <= moveTolerance)
                 {
-                    moveDistance = _moveSpeed;
+                    _path.RemoveAt(_path.Count - 1);
+                    continue;
                 }
 
-                Vector3 moveVector =
-                    (_moveSpeed < moveDistance) ?
-                    (nextPos - currentPos) :
-                    (nextPos - currentPos).normalized * _moveSpeed;
+                // Arrived at target
+                break;
 
-                _rigidbody.MovePosition(currentPos + moveVector * deltaTime);
+            } while (_path.Count > 0);
+
+            if (moveDistance > moveTolerance)
+            {
+                float moveSpeed = Mathf.Min(deltaTime * _moveSpeed, moveDistance);
+                Vector3 moveVector = (nextPos - currentPos).normalized * moveSpeed;
+
+                _rigidbody.MovePosition(currentPos + moveVector);
                 _rigidbody.velocity = Vector3.zero;
                 _state = BabyState.WALKING;
 
@@ -140,7 +165,7 @@ public class Baby : MonoBehaviour {
                 }
             }
 
-            if (_path.Count == 0)
+            if (_path.Count <= minTilesAway)
             {
                 switch (_player._state)
                 {
@@ -168,7 +193,7 @@ public class Baby : MonoBehaviour {
             return;
         }
 
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.yellow;
 
         if (_originTile != null)
         {
@@ -182,9 +207,9 @@ public class Baby : MonoBehaviour {
         if (_path != null)
         {
             Vector3 currentPos = transform.position;
-            foreach (var tile in _path)
+            for (int i = _path.Count - 1; i >= 0; --i)
             {
-                Vector3 nextPos = tile.transform.position;
+                Vector3 nextPos = _path[i].transform.position;
                 Gizmos.DrawLine(currentPos, nextPos);
                 currentPos = nextPos;
             }

@@ -15,7 +15,6 @@ public class Predator : MonoBehaviour
     //private Player _player = null;
 
     // Game state
-    private Stack<Tile> _path = null;
     private Tile _originTile = null;
     private Tile _targetTile = null;
     private Tile _previousTarget = null;
@@ -36,11 +35,10 @@ public class Predator : MonoBehaviour
         _sector = GameObject.FindObjectOfType<Sector>();
         //_player = GameObject.FindObjectOfType<Player>();
 
-        _path = null;
         _originTile = null;
         _targetTile = null;
         _previousTarget = null;
-        _attackElapsed = 0.0f;
+        _attackElapsed = Random.Range(0.0f, _attackDelay);
         _attacking = false;
     }
 
@@ -57,7 +55,7 @@ public class Predator : MonoBehaviour
             }
         }
 
-        if (_path == null || _path.Count <= 0)
+        if (_targetTile == null || _targetTile == _originTile)
         {
             _originTile = _sector.GetClosestTile(this.transform.position);
             Tile target = null;
@@ -86,21 +84,19 @@ public class Predator : MonoBehaviour
                     break;
                 }
             }
+
+            // If there are no more options, then just turn around
             if (target == null)
             {
                 target = _previousTarget;
             }
 
+            // If we found a target, then save it
             if (_originTile != null && target != null)
             {
                 _previousTarget = _targetTile;
                 _targetTile = target;
-                _path = new Stack<Tile>();
-                _path.Push(_targetTile);
             }
-            
-            //_targetTile = _sector.GetClosestTile(_player.transform.position);
-            //_path = _sector.FindShortestPath(_originTile, _targetTile, 100);
         }
     }
 
@@ -108,106 +104,68 @@ public class Predator : MonoBehaviour
     {
         float deltaTime = Time.fixedDeltaTime;
         
-        if (_path != null && _path.Count > 0)
+        if (_targetTile != null)
         {
             Vector3 currentPos = transform.position;
-            Vector3 nextPos = currentPos;
-            float moveDistance = 0.0f;
-            do
-            {
-                nextPos = _path.Peek().transform.position;
-                moveDistance = Vector3.Distance(currentPos, nextPos);
-                if (moveDistance <= 0.5f)
-                {
-                    _path.Pop();
-                }
-                else
-                {
-                    break;
-                }
-            } while (_path.Count > 0);
+            Vector3 nextPos = _targetTile.transform.position;
+            float moveDistance = Vector3.Distance(currentPos, nextPos);
 
-            if (moveDistance > 0.5f)
+            if (moveDistance > 0.4f)
             {
-                if (_moveSpeed < moveDistance)
-                {
-                    moveDistance = _moveSpeed;
-                }
-                Vector3 moveVector =
-                    (_moveSpeed < moveDistance) ?
-                    (nextPos - currentPos) :
-                    (nextPos - currentPos).normalized * _moveSpeed;
+                float moveSpeed = Mathf.Min(deltaTime * _moveSpeed, moveDistance);
+                Vector3 moveVector = (nextPos - currentPos).normalized * moveSpeed;
 
-                _rigidbody.MovePosition(currentPos + moveVector * deltaTime);
+                _rigidbody.MovePosition(currentPos + moveVector);
                 _rigidbody.velocity = Vector3.zero;
-            }
-        }
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        switch (collision.gameObject.tag)
-        {
-            case Player.PREDATOR_TAG:
-            case Player.PLAYER_TAG:
-                _path = null;
+                if (moveVector.x > 0.0f)
+                {
+                    transform.localScale = Vector3.one;
+                }
+                else if (moveVector.x < 0.0f)
+                {
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                }
+            }
+            else
+            {
                 _targetTile = null;
-                _previousTarget = null;
-                break;
+            }
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        switch (other.tag)
+        if (other.tag == Player.PLAYER_TAG || other.tag == Player.BABY_TAG)
         {
-            case Player.PLAYER_TAG:
-                if (!_attacking)
-                {
-                    OnAttackStart();
-                }
-                else
-                {
-                    var player = other.gameObject.GetComponent<Player>();
-                    player._state = Player.PlayerState.DEAD;
-                }
-                break;
-            case Player.BABY_TAG:
-                if (!_attacking)
-                {
-                    OnAttackStart();
-                }
-                else
-                {
-                    var baby = other.gameObject.GetComponent<Baby>();
-                    baby._state = Baby.BabyState.DEAD;
-                }
-                break;
+            if (!_attacking)
+            {
+                OnAttackStart();
+            }
+            else if (other.tag == Player.PLAYER_TAG)
+            {
+                var player = other.gameObject.GetComponent<Player>();
+                player._state = Player.PlayerState.DEAD;
+            }
+            else if (other.tag == Player.BABY_TAG)
+            {
+                var baby = other.gameObject.GetComponent<Baby>();
+                baby._state = Baby.BabyState.DEAD;
+            }
         }
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
-
-        if (_originTile != null)
-        {
-            Gizmos.DrawSphere(_originTile.transform.position, 0.2f);
-        }
+        
         if (_targetTile != null)
         {
-            Gizmos.DrawSphere(_targetTile.transform.position, 0.2f);
-        }
-
-        if (_path != null)
-        {
             Vector3 currentPos = transform.position;
-            foreach (var tile in _path)
-            {
-                Vector3 nextPos = tile.transform.position;
-                Gizmos.DrawLine(currentPos, nextPos);
-                currentPos = nextPos;
-            }
+            Vector3 nextPos = _targetTile.transform.position;
+
+            Gizmos.DrawLine(currentPos, nextPos);
+            Gizmos.DrawSphere(nextPos, 0.2f);
         }
     }
 
