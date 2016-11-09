@@ -82,20 +82,8 @@ public class Tile : MonoBehaviour {
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(
-            Vector3.zero, 
-            new Vector3(_width, _height, 0.5f + 0.5f * _predatorOccupancy)
+            new Vector3(0.0f, 0.0f, -0.5f * _predatorOccupancy),
+            new Vector3(_width, _height, 0.5f)
         );
-        //Gizmos.DrawSphere(Vector3.zero, 0.2f);
-
-        /*
-        Gizmos.color = Color.blue;
-        foreach (var adj in _adjacentRooms)
-        {
-            if (adj.room != null)
-            {
-                Gizmos.DrawLine(Vector3.zero, adj.room.transform.position - roomCenter);
-            }
-        }
-        */
     }
 }

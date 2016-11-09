@@ -22,4 +22,13 @@ public class PredatorSpawnTile : MonoBehaviour {
             }
         }
     }
+
+    void OnDrawGizmos()
+    {
+        if (!_triggered)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, 0.4f);
+        }
+    }
 }

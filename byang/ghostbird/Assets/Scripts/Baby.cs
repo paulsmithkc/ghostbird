@@ -6,7 +6,7 @@ public class Baby : MonoBehaviour {
 
     // Physicis Tuning
     public const float _moveSpeed = 1.5f;
-    public const int _foodMax = 5;
+    public const int _foodMax = 10;
     public const float _hungerInterval = 24.0f;
 
     private Sector _sector = null;
@@ -105,7 +105,7 @@ public class Baby : MonoBehaviour {
             Vector3 currentPos = transform.position;
             Vector3 nextPos = currentPos;
             float moveDistance = 0.0f;
-            float moveTolerance = 0.4f;
+            float moveTolerance = 0.2f;
             do
             {
                 Tile nextTile = _path[_path.Count - 1];

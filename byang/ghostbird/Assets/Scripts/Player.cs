@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     // Physicis Tuning
     public const float _moveSpeed = 2.0f;
     public const float _tiredMax = 24.0f;
-    public const int _foodMax = 5;
+    public const int _foodMax = 10;
     public const float _eatInterval = 1.0f;
     public const float _hungerInterval = 12.0f;
 
@@ -91,6 +91,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown(RESTART_INPUT))
         {
+            Time.timeScale = 1.0f;
             OnRestart();
             return;
         }
@@ -214,7 +215,7 @@ public class Player : MonoBehaviour
             Vector3 currentPos = transform.position;
             Vector3 nextPos = currentPos;
             float moveDistance = 0.0f;
-            float moveTolerance = 0.4f;
+            float moveTolerance = 0.2f;
             do
             {
                 Tile nextTile = _path[_path.Count - 1];

@@ -141,16 +141,24 @@ public class Predator : MonoBehaviour
             if (!_attacking)
             {
                 OnAttackStart();
+                return;
             }
-            else if (other.tag == Player.PLAYER_TAG)
+
+            if (other.tag == Player.PLAYER_TAG)
             {
                 var player = other.gameObject.GetComponent<Player>();
-                player._state = Player.PlayerState.DEAD;
+                if (player._state != Player.PlayerState.HIDING)
+                {
+                    player._state = Player.PlayerState.DEAD;
+                }
             }
             else if (other.tag == Player.BABY_TAG)
             {
                 var baby = other.gameObject.GetComponent<Baby>();
-                baby._state = Baby.BabyState.DEAD;
+                if (baby._state != Baby.BabyState.HIDING)
+                {
+                    baby._state = Baby.BabyState.DEAD;
+                }
             }
         }
     }
@@ -180,5 +188,11 @@ public class Predator : MonoBehaviour
     public void OnAttackEnd()
     {
         _attacking = false;
+    }
+
+    public void ForgetPath()
+    {
+        _targetTile = null;
+        _previousTarget = null;
     }
 }

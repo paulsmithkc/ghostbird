@@ -8,17 +8,17 @@ public class Sector : MonoBehaviour {
     public const float TILE_SIZE = 2.0f;
 
     // Designer
-    private Tile[] _tiles = new Tile[0];
+    public Tile[] _tiles = new Tile[0];
     //private Door[] _doors = new Door[0];
-    public RoomLink[] _roomLinks = new RoomLink[0];
+    //public RoomLink[] _roomLinks = new RoomLink[0];
 
-    [System.Serializable]
-    public class RoomLink
-    {
-        public Door door;
-        public Tile tile1;
-        public Tile tile2;
-    }
+    //[System.Serializable]
+    //public class RoomLink
+    //{
+    //    public Door door;
+    //    public Tile tile1;
+    //    public Tile tile2;
+    //}
 
     void Start () {
         _tiles = GetComponentsInChildren<Tile>();
@@ -138,6 +138,7 @@ public class Sector : MonoBehaviour {
         return null;
     }
 
+    /*
     void OnDrawGizmos()
     {
         if (_roomLinks != null)
@@ -169,4 +170,5 @@ public class Sector : MonoBehaviour {
             }
         }
     }
+    */
 }

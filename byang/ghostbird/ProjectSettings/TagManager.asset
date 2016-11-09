@@ -10,6 +10,7 @@ TagManager:
   - Predator
   - Child
   - FruitTree
+  - Baby
   layers:
   - Default
   - TransparentFX
