@@ -353,6 +353,7 @@ public class Player : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1.0f;
     }
 
     //void OnTriggerEnter(Collider other)

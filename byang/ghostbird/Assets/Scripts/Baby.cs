@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Baby : MonoBehaviour {
 
     // Physicis Tuning
-    public const float _moveSpeed = 1.5f;
+    public const float _moveSpeed = 1.8f;
     public const int _foodMax = 10;
     public const float _hungerInterval = 24.0f;
 
