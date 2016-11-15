@@ -34,7 +34,7 @@ public abstract class IntroRunner : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (currentPanel == null)
+        if (currentPanel == null && _panels != null && _panels.Count > 0)
         {
             OnNextPanel();
         }
