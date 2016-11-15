@@ -7,7 +7,7 @@ public class Baby : MonoBehaviour {
     // Physicis Tuning
     public const float _moveSpeed = 1.8f;
     public const int _foodMax = 10;
-    public const float _hungerInterval = 24.0f;
+    public const float _hungerInterval = 120.0f;
 
     private Sector _sector = null;
     private Player _player = null;

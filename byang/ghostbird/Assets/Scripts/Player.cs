@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public const float _tiredMax = 24.0f;
     public const int _foodMax = 10;
     public const float _eatInterval = 1.0f;
-    public const float _hungerInterval = 2.0f;
+    public const float _hungerInterval = 12.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
