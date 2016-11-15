@@ -7,11 +7,19 @@ public class PredatorAlertTile : MonoBehaviour
     private bool _triggered = false;
 
     public int _radius = 10;
+    public AudioSource _audioSource = null;
+    public AudioClip _alertSound = null;
+    public float _alertVolume = 0.5f;
 
     void Start()
     {
         _sector = GameObject.FindObjectOfType<Sector>();
         _triggered = false;
+
+        if (!_audioSource)
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -29,10 +37,16 @@ public class PredatorAlertTile : MonoBehaviour
                 t._predatorOccupancy += Mathf.Min(0, ((int)Mathf.Floor(distance) - _radius) / 2);
             }
 
+            var target = GetComponent<Tile>();
             var predators = GameObject.FindObjectsOfType<Predator>();
             foreach (var p in predators)
             {
-                p.ForgetPath();
+                p.RushTowards(target);
+            }
+
+            if (_audioSource != null && _alertSound != null)
+            {
+                _audioSource.PlayOneShot(_alertSound, _alertVolume);
             }
         }
     }

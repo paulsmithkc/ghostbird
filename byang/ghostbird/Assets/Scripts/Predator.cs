@@ -15,6 +15,7 @@ public class Predator : MonoBehaviour
     //private Player _player = null;
 
     // Game state
+    private List<Tile> _path = null;
     private Tile _originTile = null;
     private Tile _targetTile = null;
     private Tile _previousTarget = null;
@@ -35,6 +36,7 @@ public class Predator : MonoBehaviour
         _sector = GameObject.FindObjectOfType<Sector>();
         //_player = GameObject.FindObjectOfType<Player>();
 
+        _path = null;
         _originTile = null;
         _targetTile = null;
         _previousTarget = null;
@@ -55,7 +57,10 @@ public class Predator : MonoBehaviour
             }
         }
 
-        if (_targetTile == null || _targetTile == _originTile)
+        if (_targetTile == null || 
+            _targetTile == _originTile || 
+            _path == null ||
+            _path.Count == 0)
         {
             _originTile = _sector.GetClosestTile(this.transform.position);
             Tile target = null;
@@ -96,6 +101,8 @@ public class Predator : MonoBehaviour
             {
                 _previousTarget = _targetTile;
                 _targetTile = target;
+                _path = new List<Tile>(1);
+                _path.Add(_targetTile);
             }
         }
     }
@@ -103,14 +110,45 @@ public class Predator : MonoBehaviour
     void FixedUpdate()
     {
         float deltaTime = Time.fixedDeltaTime;
-        
-        if (_targetTile != null)
+
+        if (_path != null && _path.Count > 0)
         {
             Vector3 currentPos = transform.position;
-            Vector3 nextPos = _targetTile.transform.position;
-            float moveDistance = Vector3.Distance(currentPos, nextPos);
+            Vector3 nextPos = currentPos;
+            float moveDistance = 0.0f;
+            float moveTolerance = 0.2f;
+            do
+            {
+                Tile nextTile = _path[_path.Count - 1];
+                nextPos = nextTile.transform.position;
+                moveDistance = Vector3.Distance(currentPos, nextPos);
 
-            if (moveDistance > 0.4f)
+                // Avoid walking backwards
+                if (_path.Count >= 2)
+                {
+                    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
+                    Vector3 moveVector = nextPos - currentPos;
+                    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
+                    {
+                        //Debug.Log("Predator moving backwards");
+                        _path.RemoveAt(_path.Count - 1);
+                        continue;
+                    }
+                }
+
+                // Close enough, move toward the next tile
+                if (moveDistance <= moveTolerance)
+                {
+                    _path.RemoveAt(_path.Count - 1);
+                    continue;
+                }
+
+                // Arrived at target
+                break;
+                
+            } while (_path.Count > 0);
+
+            if (moveDistance > moveTolerance)
             {
                 float moveSpeed = Mathf.Min(deltaTime * _moveSpeed, moveDistance);
                 Vector3 moveVector = (nextPos - currentPos).normalized * moveSpeed;
@@ -126,10 +164,6 @@ public class Predator : MonoBehaviour
                 {
                     transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
                 }
-            }
-            else
-            {
-                _targetTile = null;
             }
         }
     }
@@ -166,14 +200,25 @@ public class Predator : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
-        
+
+        //if (_originTile != null)
+        //{
+        //    Gizmos.DrawSphere(_originTile.transform.position, 0.2f);
+        //}
         if (_targetTile != null)
         {
-            Vector3 currentPos = transform.position;
-            Vector3 nextPos = _targetTile.transform.position;
+            Gizmos.DrawSphere(_targetTile.transform.position, 0.2f);
+        }
 
-            Gizmos.DrawLine(currentPos, nextPos);
-            Gizmos.DrawSphere(nextPos, 0.2f);
+        if (_path != null)
+        {
+            Vector3 currentPos = transform.position;
+            for (int i = _path.Count - 1; i >= 0; --i)
+            {
+                Vector3 nextPos = _path[i].transform.position;
+                Gizmos.DrawLine(currentPos, nextPos);
+                currentPos = nextPos;
+            }
         }
     }
 
@@ -190,9 +235,19 @@ public class Predator : MonoBehaviour
         _attacking = false;
     }
 
-    public void ForgetPath()
+    public void RushTowards(Tile tile)
     {
-        _targetTile = null;
+        _originTile = _sector.GetClosestTile(this.transform.position);
+        _targetTile = tile;
         _previousTarget = null;
+        _path = _sector.FindShortestPath(_originTile, tile, 100);
+
+        if (_path != null)
+        {
+            for (int i = 0; i < 2 && _path.Count > 0; ++i)
+            {
+                _path.RemoveAt(0);
+            }
+        }
     }
 }
