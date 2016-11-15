@@ -43,6 +43,7 @@
             struct vert_output {
                 float4 pos : SV_POSITION;
                 float2 uv : TEXCOORD0;
+                float2 uv2 : TEXCOORD1;
                 UNITY_FOG_COORDS(1)
             };
 
@@ -50,6 +51,7 @@
                 vert_output o;
                 o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv2 = v.vertex.xz;
                 UNITY_TRANSFER_FOG(o, o.pos);
                 return o;
             }
@@ -60,7 +62,7 @@
 
                 float alpha = c.a;
                 float time = _Time.w;
-                float4 rampColor = tex2D(_TemperatureRamp, float2((time + _TimePassed) / _TimeTillSnow, 0.5f));
+                float4 rampColor = tex2D(_TemperatureRamp, float2((time + _TimePassed - i.uv2.x * 4.0f) / _TimeTillSnow, 0.5f));
                 c = lerp(c, rampColor, rampColor.a);
                 c.a = alpha;
 
