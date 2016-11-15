@@ -34,7 +34,7 @@ public class PredatorAlertTile : MonoBehaviour
                 float distance =
                     Mathf.Abs(tp.x - triggerPos.x) / Sector.TILE_SIZE +
                     Mathf.Abs(tp.z - triggerPos.z) / Sector.TILE_SIZE;
-                t._predatorOccupancy += Mathf.Min(0, ((int)Mathf.Floor(distance) - _radius) / 2);
+                t._predatorOccupancy += Mathf.Min(0, ((int)Mathf.Floor(distance) - _radius));
             }
 
             var target = GetComponent<Tile>();

@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public const float _tiredMax = 24.0f;
     public const int _foodMax = 10;
     public const float _eatInterval = 1.0f;
-    public const float _hungerInterval = 12.0f;
+    public const float _hungerInterval = 2.0f;
 
     // Game State
     public float _tiredCurrent = 0.0f;
@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
     private Rigidbody _rigidbody;
     private Animator _animator;
     //private SpriteRenderer _spriteRenderer;
+    public HudFade _fade;
 
     public enum PlayerState
     {
@@ -155,6 +156,13 @@ public class Player : MonoBehaviour
         {
             _hungerElapsed -= _hungerInterval;
             _foodCurrent = Mathf.Clamp(_foodCurrent - 1, 0, _foodMax);
+
+            if (_fade)
+            {
+                _fade.FadeTo(new Color(0, 0, 0, 0.7f * (_foodMax - _foodCurrent) / _foodMax), 0.5f);
+                _fade.FadeTo(new Color(0, 0, 0, 0), 0.5f);
+            }
+
             if (_foodCurrent <= 0)
             {
                 _state = PlayerState.DEAD;
@@ -223,17 +231,17 @@ public class Player : MonoBehaviour
                 moveDistance = Vector3.Distance(currentPos, nextPos);
 
                 // Avoid walking backwards
-                if (_path.Count >= 2)
-                {
-                    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
-                    Vector3 moveVector = nextPos - currentPos;
-                    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
-                    {
-                        //Debug.Log("Player moving backwards");
-                        _path.RemoveAt(_path.Count - 1);
-                        continue;
-                    }
-                }
+                //if (_path.Count >= 2)
+                //{
+                //    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
+                //    Vector3 moveVector = nextPos - currentPos;
+                //    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
+                //    {
+                //        //Debug.Log("Player moving backwards");
+                //        _path.RemoveAt(_path.Count - 1);
+                //        continue;
+                //    }
+                //}
 
                 // Hide Behind bushes
                 if (_path.Count <= 1 &&

@@ -113,17 +113,17 @@ public class Baby : MonoBehaviour {
                 moveDistance = Vector3.Distance(currentPos, nextPos);
 
                 // Avoid walking backwards
-                if (_path.Count >= 2)
-                {
-                    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
-                    Vector3 moveVector = nextPos - currentPos;
-                    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
-                    {
-                        //Debug.Log("Baby moving backwards");
-                        _path.RemoveAt(_path.Count - 1);
-                        continue;
-                    }
-                }
+                //if (_path.Count >= 2)
+                //{
+                //    Vector3 nextMove = _path[_path.Count - 2].transform.position - nextPos;
+                //    Vector3 moveVector = nextPos - currentPos;
+                //    if (Vector3.Dot(moveVector, nextMove) <= 0.0f)
+                //    {
+                //        //Debug.Log("Baby moving backwards");
+                //        _path.RemoveAt(_path.Count - 1);
+                //        continue;
+                //    }
+                //}
 
                 // Hide Behind bushes
                 if (_path.Count <= 1 &&
